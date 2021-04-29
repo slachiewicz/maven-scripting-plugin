@@ -1,0 +1,21 @@
+version: 2
+updates:
+- package-ecosystem: maven
+  directory: "/"
+  schedule:
+    interval: daily
+    time: "04:00"
+  open-pull-requests-limit: 10
+  ignore:
+  - dependency-name: org.codehaus.groovy:groovy-jsr223
+    versions:
+    - 3.0.7
+  - dependency-name: org.apache.maven:maven-compat
+    versions:
+    - 3.6.3
+  - dependency-name: org.apache.maven:maven-core
+    versions:
+    - 3.6.3
+  - dependency-name: org.apache.maven:maven-plugin-api
+    versions:
+    - 3.6.3
