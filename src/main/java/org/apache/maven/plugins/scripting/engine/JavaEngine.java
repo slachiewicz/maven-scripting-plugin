@@ -65,7 +65,7 @@ import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.stream.Stream;
 
-import org.apache.maven.plugin.logging.Log;
+import org.apache.maven.api.plugin.Log;
 
 import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.joining;
@@ -199,8 +199,8 @@ public class JavaEngine extends AbstractScriptEngine implements Compilable, Cont
                 + "import java.util.*;\n"
                 + "import java.util.stream.*;\n"
                 + "import java.nio.file.*;\n"
-                + "import org.apache.maven.project.MavenProject;\n"
-                + "import org.apache.maven.plugin.logging.Log;\n"
+                + "import org.apache.maven.api.Project;\n"
+                + "import org.apache.maven.api.plugin.Log;\n"
                 + "\n"
                 + "import javax.script.Bindings;\n"
                 + "import javax.script.CompiledScript;\n"
@@ -226,7 +226,7 @@ public class JavaEngine extends AbstractScriptEngine implements Compilable, Cont
                 + "        $thread.setContextClassLoader($loader);\n"
                 + "        try {\n"
                 + "           final Bindings $bindings = $context.getBindings(ScriptContext.GLOBAL_SCOPE);\n"
-                + "           final MavenProject $project = MavenProject.class.cast($bindings.get(\"project\"));\n"
+                + "           final Project $project = Project.class.cast($bindings.get(\"project\"));\n"
                 + "           final Log $log = Log.class.cast($bindings.get(\"log\"));\n"
                 + "           " + importsAndScript[1] + "\n"
                 + "           return null;\n" // assume the script doesn't return anything for now

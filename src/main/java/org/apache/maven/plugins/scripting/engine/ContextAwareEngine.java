@@ -37,7 +37,7 @@ package org.apache.maven.plugins.scripting.engine;
  * under the License.
  */
 
-import org.apache.maven.plugin.logging.Log;
+import org.apache.maven.api.plugin.Log;
 
 /**
  * Enables a custom engine to get some mojo context.

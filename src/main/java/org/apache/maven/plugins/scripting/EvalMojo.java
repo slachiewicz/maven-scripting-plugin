@@ -24,12 +24,12 @@ import javax.script.SimpleBindings;
 
 import java.io.File;
 
-import org.apache.maven.plugin.AbstractMojo;
-import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugin.MojoFailureException;
-import org.apache.maven.plugins.annotations.Mojo;
-import org.apache.maven.plugins.annotations.Parameter;
-import org.apache.maven.project.MavenProject;
+import org.apache.maven.api.Project;
+import org.apache.maven.api.di.Inject;
+import org.apache.maven.api.plugin.Log;
+import org.apache.maven.api.plugin.MojoException;
+import org.apache.maven.api.plugin.annotations.Mojo;
+import org.apache.maven.api.plugin.annotations.Parameter;
 
 /**
  * Evaluate the specified script or scriptFile.
@@ -38,7 +38,7 @@ import org.apache.maven.project.MavenProject;
  * @since 3.0.0
  */
 @Mojo(name = "eval")
-public class EvalMojo extends AbstractMojo {
+public class EvalMojo implements org.apache.maven.api.plugin.Mojo {
     @Parameter
     private String engineName;
 
@@ -61,30 +61,33 @@ public class EvalMojo extends AbstractMojo {
     String scriptResource;
 
     // script variables
-    @Parameter(defaultValue = "${project}", readonly = true)
-    private MavenProject project;
+    @Inject
+    private Project project;
+
+    @Inject
+    private Log log;
 
     @Override
-    public void execute() throws MojoExecutionException, MojoFailureException {
+    public void execute() throws MojoException {
         try {
             AbstractScriptEvaluator execute = constructExecute();
 
             Bindings bindings = new SimpleBindings();
             bindings.put("project", project);
-            bindings.put("log", getLog());
+            bindings.put("log", log);
 
-            Object result = execute.eval(bindings, getLog());
+            Object result = execute.eval(bindings, log);
 
-            getLog().info("Result:");
+            log.info("Result:");
             if (result != null) {
-                getLog().info(result.toString());
+                log.info(result.toString());
             }
         } catch (ScriptException e) // configuring the plugin failed
         {
-            throw new MojoExecutionException(e.getMessage(), e);
+            throw new MojoException(e.getMessage(), e);
         } catch (UnsupportedScriptEngineException e) // execution failure
         {
-            throw new MojoFailureException(e.getMessage(), e);
+            throw new MojoException(e.getMessage(), e);
         }
     }
 
